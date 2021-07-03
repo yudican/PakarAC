@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "291760450111",
+    "firebase_url": "https://tukangac-1385d-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "tukangac-1385d",
+    "storage_bucket": "tukangac-1385d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:291760450111:android:ca6e9dd9160dd4fd57e68a",
+        "android_client_info": {
+          "package_name": "com.belajarapps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "291760450111-nhitrak2qjf86qacd7t0t4ngq3mlrt5o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.belajarapps",
+            "certificate_hash": "01f54301503fbd72883d97899e26a0ed2dfd1e8f"
+          }
+        },
+        {
+          "client_id": "291760450111-v8cv2q4v80vrpsvvr838jsqgg4d5aqvh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.belajarapps",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "291760450111-hq5je4vpfn6q2mnilg28jpjoespra0or.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBTj0-rAJV_qKJiyI4PbPSgQAVfTCkqkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "291760450111-hq5je4vpfn6q2mnilg28jpjoespra0or.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:291760450111:android:038277e6a88617b657e68a",
+        "android_client_info": {
+          "package_name": "com.pelangganpakarac"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "291760450111-hq5je4vpfn6q2mnilg28jpjoespra0or.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBTj0-rAJV_qKJiyI4PbPSgQAVfTCkqkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "291760450111-hq5je4vpfn6q2mnilg28jpjoespra0or.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
