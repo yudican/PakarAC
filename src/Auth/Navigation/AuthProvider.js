@@ -114,6 +114,28 @@ export const AuthProvider = ({children}) => {
             Alert.alert('Error', 'Email salah atau tidak terdaftar');
           }
         },
+        updatePassword: async (email, password, newPassword, navigation) => {
+          if (password == '' || newPassword == '') {
+            Alert.alert('Informasi', 'Silahkan isi semua form yang tersedia.');
+          } else {
+            await db.app
+              .auth()
+              .signInWithEmailAndPassword(email, password)
+              .then(() => {
+                db.app
+                  .auth()
+                  .currentUser.updatePassword(newPassword)
+                  .then(async () => {
+                    Alert.alert('Berhasil', 'Kata sandi baru telah diupdate.');
+
+                    navigation.goBack();
+                  });
+              })
+              .catch(() => {
+                Alert.alert('Error', 'Kata sandi yang anda masukkan salah');
+              });
+          }
+        },
         logout: async (navigation = null) => {
           try {
             await db.app

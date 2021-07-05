@@ -18,6 +18,7 @@ import LaporanKeuangan from '../../Pages/LaporanKeuangan';
 import PembayaranAdm from '../../Pages/PembayaranAdm';
 import Notifikasi from '../../Pages/Notifikasi';
 import Komplain from '../../Pages/Komplain';
+import UbahPassword from '../../Pages/UpdatePassword';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -77,6 +78,11 @@ const AppStack = () => {
       <Stack.Screen
         name="Komplain"
         component={Komplain}
+        options={{header: () => null}}
+      />
+      <Stack.Screen
+        name="UbahPassword"
+        component={UbahPassword}
         options={{header: () => null}}
       />
     </Stack.Navigator>
