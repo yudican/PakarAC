@@ -82,25 +82,28 @@ export default class UbahProfil extends Component {
     await this.firebaseRef
       .ref('Pengguna/Penyedia_Jasa/' + this.context.auth.user.uid)
       .on('value', (snapshot) => {
-        const {
-          nama,
-          alamat,
-          no_telp,
-          provinsi,
-          kota,
-          spanduk,
-          profile_photo,
-        } = snapshot.val();
-        this.setState((prevState) => ({
-          ...prevState,
-          nama,
-          alamat,
-          no_telp,
-          provinsi,
-          kota,
-          spanduk,
-          profile_photo,
-        }));
+        const userData = snapshot.val();
+        if (userData) {
+          const {
+            nama,
+            alamat,
+            no_telp,
+            provinsi,
+            kota,
+            spanduk,
+            profile_photo,
+          } = userData;
+          this.setState((prevState) => ({
+            ...prevState,
+            nama,
+            alamat,
+            no_telp,
+            provinsi,
+            kota,
+            spanduk,
+            profile_photo,
+          }));
+        }
       });
   };
 

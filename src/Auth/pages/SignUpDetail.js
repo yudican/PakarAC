@@ -34,7 +34,7 @@ export default class SignupDetail extends Component {
         alamat: '',
         no_telp: '',
         provinsi: 'Sumatera Utara',
-        kota: '',
+        kota: 'Medan',
         spanduk: '',
         ktp: '',
         status: 'checking',
@@ -89,8 +89,8 @@ export default class SignupDetail extends Component {
           this.setState((prevState) => ({
             formData: {
               ...prevState.formData,
-              profile_photo,
-              nama,
+              profile_photo: profile_photo ? profile_photo : '',
+              nama: nama ? nama : '',
             },
           }));
         }
@@ -323,7 +323,7 @@ export default class SignupDetail extends Component {
                       ))}
                 </Picker>
               </View>
-              <Card.Divider></Card.Divider>
+              <Card.Divider />
               <Image
                 source={{
                   uri:
@@ -342,7 +342,7 @@ export default class SignupDetail extends Component {
                 }>
                 <Text style={styles.buttonText}>Pilih Foto Spanduk</Text>
               </TouchableOpacity>
-              <Card.Divider></Card.Divider>
+              <Card.Divider />
               <Image
                 source={{
                   uri:

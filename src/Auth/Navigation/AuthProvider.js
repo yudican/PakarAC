@@ -80,27 +80,23 @@ export const AuthProvider = ({children}) => {
           }
         },
         registerDetail: async (data, userUid, navigation) => {
-          try {
-            await db.app
-              .database()
-              .ref('Pengguna/Penyedia_Jasa/' + userUid)
-              .update(data)
-              .then((data) => {
-                db.app
-                  .database()
-                  .ref(
-                    `Pengguna/Penyedia_Jasa/${userUid}/Laporan-Keuangan/Bulan-${new Date().getMonth()}-${new Date().getFullYear()}`,
-                  )
-                  .set({pendapatan: 0, biayaAdmin: 0, status: 'Perlu Dibayar'});
-                Alert.alert(
-                  'Berhasil',
-                  'Akun anda sedang ditinjau. mohon tunggu',
-                );
-                navigation.replace('SignUpPending');
-              });
-          } catch (e) {
-            Alert.alert('Error', 'Data yang anda masukkan tidak sesuai');
-          }
+          await db.app
+            .database()
+            .ref('Pengguna/Penyedia_Jasa/' + userUid)
+            .update(data)
+            .then((data) => {
+              db.app
+                .database()
+                .ref(
+                  `Pengguna/Penyedia_Jasa/${userUid}/Laporan-Keuangan/Bulan-${new Date().getMonth()}-${new Date().getFullYear()}`,
+                )
+                .set({pendapatan: 0, biayaAdmin: 0, status: 'Perlu Dibayar'});
+              Alert.alert(
+                'Berhasil',
+                'Akun anda sedang ditinjau. mohon tunggu',
+              );
+              navigation.replace('SignUpPending');
+            });
         },
         sendEmailResetPaasword: async (email) => {
           try {

@@ -46,11 +46,13 @@ export default class BatalkanPesanan extends Component {
     await this.firebaseRef
       .ref('Pengguna/Penyedia_Jasa/' + uid)
       .on('value', (snapshot) => {
-        const {nama, profile_photo} = snapshot.val();
-        this.setState({
-          profile_photo,
-          nama,
-        });
+        if (snapshot.val()) {
+          const {nama, profile_photo} = snapshot.val();
+          this.setState({
+            profile_photo,
+            nama,
+          });
+        }
       });
   };
 
@@ -101,7 +103,7 @@ export default class BatalkanPesanan extends Component {
     };
     const notificationData = {
       noOrder,
-      title: `Pesanan Kamu Dibatalkan`,
+      title: 'Pesanan Kamu Dibatalkan',
       waktu: new Date().getTime(),
       nama,
       profile_photo,
@@ -162,7 +164,7 @@ export default class BatalkanPesanan extends Component {
                 </TouchableOpacity>
               </View>
 
-              <Card.Divider></Card.Divider>
+              <Card.Divider />
 
               <FlatList
                 data={pesanan}
@@ -181,21 +183,21 @@ export default class BatalkanPesanan extends Component {
                   </ListItem>
                 )}
               />
-              <Card.Divider></Card.Divider>
+              <Card.Divider />
               <ListItem>
                 <ListItem.Content>
                   <ListItem.Subtitle>Biaya Admin : </ListItem.Subtitle>
                 </ListItem.Content>
                 <ListItem.Subtitle>Rp. {biayaAdmin}</ListItem.Subtitle>
               </ListItem>
-              <Card.Divider></Card.Divider>
+              <Card.Divider />
               <ListItem>
                 <ListItem.Content>
                   <ListItem.Subtitle>Total Harga : </ListItem.Subtitle>
                 </ListItem.Content>
                 <ListItem.Title>Rp. {totalHarga}</ListItem.Title>
               </ListItem>
-              <Card.Divider></Card.Divider>
+              <Card.Divider />
               <TextInput
                 maxLength={500}
                 multiline

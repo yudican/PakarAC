@@ -48,11 +48,14 @@ export default class UbahPassword extends Component {
     await this.firebaseRef
       .ref('Pengguna/Penyedia_Jasa/' + this.context.auth.user.uid)
       .on('value', (snapshot) => {
-        const {email, profile_photo} = snapshot.val() || {};
-        this.setState((prevState) => ({
-          email,
-          profile_photo,
-        }));
+        const userData = snapshot.val();
+        if (userData) {
+          const {email, profile_photo} = userData;
+          this.setState((prevState) => ({
+            email,
+            profile_photo,
+          }));
+        }
       });
   };
 

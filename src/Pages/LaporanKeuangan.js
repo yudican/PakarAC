@@ -54,14 +54,9 @@ export default class LaporanKeuangan extends Component {
     if (value) {
       this.setState((prevState) => ({
         costumFilter: {
-          pendapatan:
-            parseInt(prevState.costumFilter.pendapatan) +
-            parseInt(dataItem.totalHarga),
-          totalTransaksi:
-            parseInt(prevState.costumFilter.totalTransaksi) + orderData.length,
-          totalBiayaAdmin:
-            parseInt(prevState.costumFilter.totalBiayaAdmin) +
-            parseInt(dataItem.biayaAdmin),
+          pendapatan: 0,
+          totalTransaksi: 0,
+          totalBiayaAdmin: 0,
         },
       }));
     } else {
@@ -95,107 +90,115 @@ export default class LaporanKeuangan extends Component {
     const {uid} = this.context.auth.user;
     await this.firebaseRef.ref('Pengguna/Pesanan').on('value', (snapshot) => {
       const order = snapshot.val();
-      const orderData = Object.values(order);
-      const orders = orderData.filter(
-        (itemOrder) => itemOrder.uidPenyedia === uid,
-      );
-      if (orders.length > 0) {
-        orders.map((dataItem) => {
-          let tanggalOrder = new Date(dataItem.tanggalPesan);
-          let tanggal = new Date();
-          let firstDateofTheMonth = new Date(
-            tanggal.getFullYear(),
-            tanggal.getMonth(),
-            1,
-          );
-          let lastDateofTheMonth = new Date(
-            tanggal.getFullYear(),
-            tanggal.getMonth(),
-            0,
-          );
-          let firstDateofTheYear = new Date(tanggal.getFullYear(), 0, 1);
-          let lastDateofTheYear = new Date(tanggal.getFullYear(), 12, 0);
-          let tglFilter = new Date(value);
+      if (order) {
+        const orderData = Object.values(order);
+        const orders = orderData.filter(
+          (itemOrder) => itemOrder.uidPenyedia === uid,
+        );
+        if (orders.length > 0) {
+          orders.map((dataItem) => {
+            let tanggalOrder = new Date(dataItem.tanggalPesan);
+            let tanggal = new Date();
+            let firstDateofTheMonth = new Date(
+              tanggal.getFullYear(),
+              tanggal.getMonth(),
+              1,
+            );
+            let lastDateofTheMonth = new Date(
+              tanggal.getFullYear(),
+              tanggal.getMonth(),
+              0,
+            );
+            let firstDateofTheYear = new Date(tanggal.getFullYear(), 0, 1);
+            let lastDateofTheYear = new Date(tanggal.getFullYear(), 12, 0);
+            let tglFilter = new Date(value);
 
-          if (dataItem.status === 'Sudah Selesai') {
-            if (value) {
-              if (tanggalOrder.getDate() === tglFilter.getDate()) {
-                this.setState((prevState) => ({
-                  costumFilter: {
-                    pendapatan:
-                      parseInt(prevState.costumFilter.pendapatan) +
-                      parseInt(dataItem.totalHarga),
-                    totalTransaksi:
-                      parseInt(prevState.costumFilter.totalTransaksi) +
-                      orders.filter((e) => e.status === 'Sudah Selesai').length,
-                    totalBiayaAdmin:
-                      parseInt(prevState.costumFilter.totalBiayaAdmin) +
-                      parseInt(dataItem.biayaAdmin),
-                  },
-                }));
+            if (dataItem.status === 'Sudah Selesai') {
+              if (value) {
+                if (tanggalOrder.getDate() === tglFilter.getDate()) {
+                  this.setState((prevState) => ({
+                    costumFilter: {
+                      pendapatan:
+                        parseInt(prevState.costumFilter.pendapatan) +
+                        parseInt(dataItem.totalHarga),
+                      totalTransaksi:
+                        parseInt(prevState.costumFilter.totalTransaksi) +
+                        orders.filter((e) => e.status === 'Sudah Selesai')
+                          .length,
+                      totalBiayaAdmin:
+                        parseInt(prevState.costumFilter.totalBiayaAdmin) +
+                        parseInt(dataItem.biayaAdmin),
+                    },
+                  }));
+                } else {
+                  this.setState((prevState) => ({
+                    costumFilter: {
+                      pendapatan: 0,
+                      totalTransaksi: 0,
+                      totalBiayaAdmin: 0,
+                    },
+                  }));
+                }
               } else {
-                this.setState((prevState) => ({
-                  costumFilter: {
-                    pendapatan: 0,
-                    totalTransaksi: 0,
-                    totalBiayaAdmin: 0,
-                  },
-                }));
-              }
-            } else {
-              if (tanggalOrder.getDate() === tanggal.getDate()) {
-                this.setState((prevState) => ({
-                  laporanHariIni: {
-                    pendapatan:
-                      parseInt(prevState.laporanHariIni.pendapatan) +
-                      parseInt(dataItem.totalHarga),
-                    totalTransaksi:
-                      parseInt(prevState.laporanHariIni.totalTransaksi) +
-                      orders.filter((e) => e.status === 'Sudah Selesai').length,
-                    totalBiayaAdmin:
-                      parseInt(prevState.laporanHariIni.totalBiayaAdmin) +
-                      parseInt(dataItem.biayaAdmin),
-                  },
-                }));
-              }
+                if (tanggalOrder.getDate() === tanggal.getDate()) {
+                  this.setState((prevState) => ({
+                    laporanHariIni: {
+                      pendapatan:
+                        parseInt(prevState.laporanHariIni.pendapatan) +
+                        parseInt(dataItem.totalHarga),
+                      totalTransaksi:
+                        parseInt(prevState.laporanHariIni.totalTransaksi) +
+                        orders.filter((e) => e.status === 'Sudah Selesai')
+                          .length,
+                      totalBiayaAdmin:
+                        parseInt(prevState.laporanHariIni.totalBiayaAdmin) +
+                        parseInt(dataItem.biayaAdmin),
+                    },
+                  }));
+                }
 
-              if (
-                tanggal.getDate() > firstDateofTheMonth.getDate() &&
-                tanggal.getDate() < lastDateofTheMonth.getDate()
-              ) {
-                this.setState((prevState) => ({
-                  laporanBulanIni: {
-                    pendapatan:
-                      parseInt(prevState.laporanBulanIni.pendapatan) +
-                      parseInt(dataItem.totalHarga),
-                    totalTransaksi:
-                      parseInt(prevState.laporanBulanIni.totalTransaksi) +
-                      orders.filter((e) => e.status === 'Sudah Selesai').length,
-                    totalBiayaAdmin:
-                      parseInt(prevState.laporanBulanIni.totalBiayaAdmin) +
-                      parseInt(dataItem.biayaAdmin),
-                  },
-                }));
-              }
+                if (
+                  tanggal.getDate() > firstDateofTheMonth.getDate() &&
+                  tanggal.getDate() < lastDateofTheMonth.getDate()
+                ) {
+                  this.setState((prevState) => ({
+                    laporanBulanIni: {
+                      pendapatan:
+                        parseInt(prevState.laporanBulanIni.pendapatan) +
+                        parseInt(dataItem.totalHarga),
+                      totalTransaksi:
+                        parseInt(prevState.laporanBulanIni.totalTransaksi) +
+                        orders.filter((e) => e.status === 'Sudah Selesai')
+                          .length,
+                      totalBiayaAdmin:
+                        parseInt(prevState.laporanBulanIni.totalBiayaAdmin) +
+                        parseInt(dataItem.biayaAdmin),
+                    },
+                  }));
+                }
 
-              if (firstDateofTheYear.getTime() < lastDateofTheYear.getTime()) {
-                this.setState((prevState) => ({
-                  laporanTahunIni: {
-                    pendapatan:
-                      parseInt(prevState.laporanTahunIni.pendapatan) +
-                      parseInt(dataItem.totalHarga),
-                    totalTransaksi:
-                      parseInt(prevState.laporanTahunIni.totalTransaksi) +
-                      orders.filter((e) => e.status === 'Sudah Selesai').length,
-                    totalBiayaAdmin:
-                      parseInt(prevState.laporanTahunIni.totalBiayaAdmin) +
-                      parseInt(dataItem.biayaAdmin),
-                  },
-                }));
+                if (
+                  firstDateofTheYear.getTime() < lastDateofTheYear.getTime()
+                ) {
+                  this.setState((prevState) => ({
+                    laporanTahunIni: {
+                      pendapatan:
+                        parseInt(prevState.laporanTahunIni.pendapatan) +
+                        parseInt(dataItem.totalHarga),
+                      totalTransaksi:
+                        parseInt(prevState.laporanTahunIni.totalTransaksi) +
+                        orders.filter((e) => e.status === 'Sudah Selesai')
+                          .length,
+                      totalBiayaAdmin:
+                        parseInt(prevState.laporanTahunIni.totalBiayaAdmin) +
+                        parseInt(dataItem.biayaAdmin),
+                    },
+                  }));
+                }
               }
             }
-          }
-        });
+          });
+        }
       }
     });
   };
@@ -248,7 +251,7 @@ export default class LaporanKeuangan extends Component {
         <ScrollView>
           <Card containerStyle={styles.cardContainer}>
             <Card.Title style={{color: 'green'}}>Keuangan Hari Ini</Card.Title>
-            <Card.Divider></Card.Divider>
+            <Card.Divider />
             <ListItem bottomDivider>
               <ListItem.Content>
                 <ListItem.Title>Pendapatan : </ListItem.Title>
@@ -278,7 +281,7 @@ export default class LaporanKeuangan extends Component {
             <Card.Title style={{color: '#ff602b'}}>
               Keuangan Bulan Ini
             </Card.Title>
-            <Card.Divider></Card.Divider>
+            <Card.Divider />
             <ListItem bottomDivider>
               <ListItem.Content>
                 <ListItem.Title>Pendapatan : </ListItem.Title>
@@ -308,7 +311,7 @@ export default class LaporanKeuangan extends Component {
             <Card.Title style={{color: '#2b99ff'}}>
               Keuangan Tahun Ini
             </Card.Title>
-            <Card.Divider></Card.Divider>
+            <Card.Divider />
             <ListItem bottomDivider>
               <ListItem.Content>
                 <ListItem.Title>Pendapatan : </ListItem.Title>
@@ -337,7 +340,7 @@ export default class LaporanKeuangan extends Component {
 
           <Card containerStyle={styles.cardContainer}>
             <Card.Title>Filter Laporan</Card.Title>
-            <Card.Divider></Card.Divider>
+            <Card.Divider />
             <View>
               <Button
                 title="Pilih Tanggal"
@@ -354,7 +357,7 @@ export default class LaporanKeuangan extends Component {
                 onChange={(value) => this.onChangeDate(value)}
               />
             ) : (
-              <View></View>
+              <View />
             )}
             <ListItem bottomDivider>
               <ListItem.Content>

@@ -49,23 +49,25 @@ export default class Komplain extends Component {
     await this.firebaseRef
       .ref(`Pengguna/Pesanan/${noOrder}`)
       .on('value', (snapshot) => {
-        const data = snapshot.val() ? snapshot.val() : {};
+        const data = snapshot.val();
         if (data) {
           this.firebaseRef
             .ref(`Pengguna/Pelanggan/${uid_pelanggan}`)
             .on('value', (snap) => {
-              const dataPelanggan = snap.val() ? snap.val() : {};
+              const dataPelanggan = snap.val();
 
-              this.setState({
-                uid_pesanan: noOrder,
-                totalHarga: data.totalHarga,
-                biayaAdmin: data.biayaAdmin,
-                penyedia_jasa: dataPelanggan.nama,
-                image: dataPelanggan.spanduk,
-                alamat: dataPelanggan.alamat,
-                no_telpon: dataPelanggan.no_telp,
-                jasa: Object.values(data.Jasa),
-              });
+              if (dataPelanggan) {
+                this.setState({
+                  uid_pesanan: noOrder,
+                  totalHarga: data.totalHarga,
+                  biayaAdmin: data.biayaAdmin,
+                  penyedia_jasa: dataPelanggan.nama,
+                  image: dataPelanggan.spanduk,
+                  alamat: dataPelanggan.alamat,
+                  no_telpon: dataPelanggan.no_telp,
+                  jasa: Object.values(data.Jasa),
+                });
+              }
             });
         }
       });
@@ -77,10 +79,12 @@ export default class Komplain extends Component {
     await this.firebaseRef
       .ref(`Pengguna/Pelanggan/${uid_pelanggan}`)
       .on('value', (snap) => {
-        const users = snap.val() || {};
-        this.setState({
-          user: users,
-        });
+        const users = snap.val();
+        if (users) {
+          this.setState({
+            user: users,
+          });
+        }
       });
   };
 
@@ -145,7 +149,8 @@ export default class Komplain extends Component {
         <ScrollView>
           <ImageBackground
             source={require('../Assets/Image/BerandaImage.png')}
-            style={styles.header}></ImageBackground>
+            style={styles.header}
+          />
           <View style={styles.container}>
             <Card containerStyle={styles.cardContainer}>
               <View style={styles.labelTokoContainer}>
@@ -177,7 +182,7 @@ export default class Komplain extends Component {
                 </TouchableOpacity>
               </View>
 
-              <Card.Divider></Card.Divider>
+              <Card.Divider />
 
               <FlatList
                 data={jasa}
@@ -196,7 +201,7 @@ export default class Komplain extends Component {
                   </ListItem>
                 )}
               />
-              <Card.Divider></Card.Divider>
+              <Card.Divider />
               <ListItem>
                 <ListItem.Content>
                   <ListItem.Subtitle>Biaya Admin : </ListItem.Subtitle>
@@ -205,14 +210,14 @@ export default class Komplain extends Component {
                   Rp. {this.state.biayaAdmin}
                 </ListItem.Subtitle>
               </ListItem>
-              <Card.Divider></Card.Divider>
+              <Card.Divider />
               <ListItem>
                 <ListItem.Content>
                   <ListItem.Subtitle>Total Harga : </ListItem.Subtitle>
                 </ListItem.Content>
                 <ListItem.Title>Rp. {totalHarga}</ListItem.Title>
               </ListItem>
-              <Card.Divider></Card.Divider>
+              <Card.Divider />
               <TextInput
                 editable
                 maxLength={1000}
@@ -223,7 +228,7 @@ export default class Komplain extends Component {
                 defaultValue={this.state.komplain}
                 style={{paddingHorizontal: 20}}
               />
-              <Card.Divider></Card.Divider>
+              <Card.Divider />
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => this.handlePosting()}>

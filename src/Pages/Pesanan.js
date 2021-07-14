@@ -27,51 +27,52 @@ export default class Pesanan extends Component {
   handleGetPesanan = async () => {
     const {uid} = this.context.auth.user;
     await this.firebaseRef.ref('Pengguna/Pesanan').on('value', (snapshot) => {
-      const order = snapshot.val() || {};
-
-      const orderData = Object.values(order);
-      const orders = orderData.filter(
-        (itemOrder) => itemOrder.uidPenyedia === uid,
-      );
-      this.setState({pesanan: []});
-      if (orders.length > 0) {
-        orders.map((item) => {
-          this.firebaseRef
-            .ref('Pengguna/Penyedia_Jasa/' + item.uidPenyedia)
-            .on('value', (snapshots) => {
-              const seller = snapshots.val();
-              if (seller) {
-                this.firebaseRef
-                  .ref('Pengguna/Pelanggan/' + item.uidPelanggan)
-                  .on('value', (snapshotsPel) => {
-                    const pelanggan = snapshotsPel.val();
-                    if (pelanggan) {
-                      this.setState((prevState) => ({
-                        pesanan: [
-                          ...prevState.pesanan,
-                          {
-                            ...item,
-                            merk: seller.merk,
-                            pelanggan,
-                            uid_pelanggan: item.uidPelanggan,
-                          },
-                        ],
-                      }));
-                    }
-                  });
-              }
-            });
-        });
+      const order = snapshot.val();
+      if (order) {
+        const orderData = Object.values(order);
+        const orders = orderData.filter(
+          (itemOrder) => itemOrder.uidPenyedia === uid,
+        );
+        this.setState({pesanan: []});
+        if (orders.length > 0) {
+          orders.map((item) => {
+            this.firebaseRef
+              .ref('Pengguna/Penyedia_Jasa/' + item.uidPenyedia)
+              .on('value', (snapshots) => {
+                const seller = snapshots.val();
+                if (seller) {
+                  this.firebaseRef
+                    .ref('Pengguna/Pelanggan/' + item.uidPelanggan)
+                    .on('value', (snapshotsPel) => {
+                      const pelanggan = snapshotsPel.val();
+                      if (pelanggan) {
+                        this.setState((prevState) => ({
+                          pesanan: [
+                            ...prevState.pesanan,
+                            {
+                              ...item,
+                              merk: seller.merk,
+                              pelanggan,
+                              uid_pelanggan: item.uidPelanggan,
+                            },
+                          ],
+                        }));
+                      }
+                    });
+                }
+              });
+          });
+        }
       }
     });
   };
   render() {
     const {pesanan, search} = this.state;
     const {navigation} = this.props;
-    const filteredElements = pesanan.filter(
-      (e) =>
-        e.pelanggan.nama.toLowerCase().includes(search) ||
-        getDateOrder(e.tanggalPesan, '/').includes(search),
+    const filteredElements = pesanan.filter((e) =>
+      e.pelanggan.nama
+        ? e.pelanggan.nama.toLowerCase().includes(search)
+        : e || getDateOrder(e.tanggalPesan, '/').includes(search),
     );
     return (
       <View style={{flex: 1}}>

@@ -42,10 +42,12 @@ export default class KelolaJasa extends Component {
     await this.firebaseRef
       .ref('Pengguna/Penyedia_Jasa/' + uid)
       .on('value', (snapshot) => {
-        const {spanduk} = snapshot.val();
-        this.setState({
-          spanduk,
-        });
+        if (snapshot.val()) {
+          const {spanduk} = snapshot.val();
+          this.setState({
+            spanduk,
+          });
+        }
       });
   };
 
@@ -100,14 +102,14 @@ export default class KelolaJasa extends Component {
         <ScrollView>
           <Card containerStyle={styles.cardContainer}>
             <Card.Title>Foto Spanduk</Card.Title>
-            <Card.Divider></Card.Divider>
+            <Card.Divider />
             <Image
               source={{
                 uri: spanduk,
               }}
               style={{width: '100%', height: 200}}
             />
-            <Card.Divider></Card.Divider>
+            <Card.Divider />
             <TouchableOpacity
               style={styles.button}
               onPress={() =>
@@ -118,7 +120,7 @@ export default class KelolaJasa extends Component {
           </Card>
           <Card containerStyle={styles.cardContainer}>
             <Card.Title>List Jasa</Card.Title>
-            <Card.Divider></Card.Divider>
+            <Card.Divider />
 
             <FlatList
               data={data_jasa}

@@ -49,42 +49,43 @@ export default class Beranda2 extends Component {
 
   handleGetPesanan = async () => {
     const {uid} = this.context.auth.user;
-    console.warn(uid);
     await this.firebaseRef.ref('Pengguna/Pesanan').on('value', (snapshot) => {
       const order = snapshot.val();
-      const orderData = Object.values(order);
-      const orders = orderData.filter(
-        (itemOrder) => itemOrder.uidPenyedia === uid,
-      );
-      this.setState({pesanan: []});
-      if (orders.length > 0) {
-        orders.map((item) => {
-          this.firebaseRef
-            .ref('Pengguna/Penyedia_Jasa/' + item.uidPenyedia)
-            .on('value', (snapshots) => {
-              const seller = snapshots.val();
-              if (seller) {
-                this.firebaseRef
-                  .ref('Pengguna/Pelanggan/' + item.uidPelanggan)
-                  .on('value', (snapshotsPel) => {
-                    const pelanggan = snapshotsPel.val();
-                    if (pelanggan) {
-                      this.setState((prevState) => ({
-                        pesanan: [
-                          ...prevState.pesanan,
-                          {
-                            ...item,
-                            merk: seller.merk,
-                            pelanggan,
-                            uid_pelanggan: item.uidPelanggan,
-                          },
-                        ],
-                      }));
-                    }
-                  });
-              }
-            });
-        });
+      if (order) {
+        const orderData = Object.values(order);
+        const orders = orderData.filter(
+          (itemOrder) => itemOrder.uidPenyedia === uid,
+        );
+        this.setState({pesanan: []});
+        if (orders.length > 0) {
+          orders.map((item) => {
+            this.firebaseRef
+              .ref('Pengguna/Penyedia_Jasa/' + item.uidPenyedia)
+              .on('value', (snapshots) => {
+                const seller = snapshots.val();
+                if (seller) {
+                  this.firebaseRef
+                    .ref('Pengguna/Pelanggan/' + item.uidPelanggan)
+                    .on('value', (snapshotsPel) => {
+                      const pelanggan = snapshotsPel.val();
+                      if (pelanggan) {
+                        this.setState((prevState) => ({
+                          pesanan: [
+                            ...prevState.pesanan,
+                            {
+                              ...item,
+                              merk: seller.merk,
+                              pelanggan,
+                              uid_pelanggan: item.uidPelanggan,
+                            },
+                          ],
+                        }));
+                      }
+                    });
+                }
+              });
+          });
+        }
       }
     });
   };
@@ -119,47 +120,49 @@ export default class Beranda2 extends Component {
     const {uid} = this.context.auth.user;
     await this.firebaseRef.ref('Pengguna/Pesanan').on('value', (snapshot) => {
       const order = snapshot.val();
-      const orderData = Object.values(order);
-      const orders = orderData.filter(
-        (itemOrder) => itemOrder.uidPenyedia === uid,
-      );
-      if (orders.length > 0) {
-        orders.map((dataItem) => {
-          if (dataItem.status === 'Sudah Selesai') {
-            let tanggalOrder = new Date(dataItem.tanggalPesan);
-            let tanggal = new Date();
-            let firstDateofTheMonth = new Date(
-              tanggalOrder.getFullYear(),
-              tanggalOrder.getMonth(),
-              1,
-            );
-            let lastDateofTheMonth = new Date(
-              tanggalOrder.getFullYear(),
-              tanggalOrder.getMonth(),
-              0,
-            );
+      if (order) {
+        const orderData = Object.values(order);
+        const orders = orderData.filter(
+          (itemOrder) => itemOrder.uidPenyedia === uid,
+        );
+        if (orders.length > 0) {
+          orders.map((dataItem) => {
             if (dataItem.status === 'Sudah Selesai') {
-              if (
-                tanggal.getDate() > firstDateofTheMonth.getDate() &&
-                tanggal.getDate() < lastDateofTheMonth.getDate()
-              ) {
-                this.setState((prevState) => ({
-                  laporanBulanIni: {
-                    pendapatan:
-                      parseInt(prevState.laporanBulanIni.pendapatan) +
-                      parseInt(dataItem.totalHarga),
-                    totalTransaksi:
-                      parseInt(prevState.laporanBulanIni.totalTransaksi) +
-                      orderData.length,
-                    totalBiayaAdmin:
-                      parseInt(prevState.laporanBulanIni.totalBiayaAdmin) +
-                      parseInt(dataItem.biayaAdmin),
-                  },
-                }));
+              let tanggalOrder = new Date(dataItem.tanggalPesan);
+              let tanggal = new Date();
+              let firstDateofTheMonth = new Date(
+                tanggalOrder.getFullYear(),
+                tanggalOrder.getMonth(),
+                1,
+              );
+              let lastDateofTheMonth = new Date(
+                tanggalOrder.getFullYear(),
+                tanggalOrder.getMonth(),
+                0,
+              );
+              if (dataItem.status === 'Sudah Selesai') {
+                if (
+                  tanggal.getDate() > firstDateofTheMonth.getDate() &&
+                  tanggal.getDate() < lastDateofTheMonth.getDate()
+                ) {
+                  this.setState((prevState) => ({
+                    laporanBulanIni: {
+                      pendapatan:
+                        parseInt(prevState.laporanBulanIni.pendapatan) +
+                        parseInt(dataItem.totalHarga),
+                      totalTransaksi:
+                        parseInt(prevState.laporanBulanIni.totalTransaksi) +
+                        orderData.length,
+                      totalBiayaAdmin:
+                        parseInt(prevState.laporanBulanIni.totalBiayaAdmin) +
+                        parseInt(dataItem.biayaAdmin),
+                    },
+                  }));
+                }
               }
             }
-          }
-        });
+          });
+        }
       }
     });
   };
@@ -205,7 +208,7 @@ export default class Beranda2 extends Component {
                 Rp.{laporanBulanIni.pendapatan}
               </ListItem.Subtitle>
             </ListItem>
-            <Card.Divider></Card.Divider>
+            <Card.Divider />
             <ListItem>
               <ListItem.Content>
                 <ListItem.Title>Biaya Admin Bulan ini : </ListItem.Title>
@@ -214,7 +217,7 @@ export default class Beranda2 extends Component {
                 Rp.{laporanBulanIni.totalBiayaAdmin}
               </ListItem.Subtitle>
             </ListItem>
-            <Card.Divider></Card.Divider>
+            <Card.Divider />
             <ListItem>
               <ListItem.Content>
                 <ListItem.Title>
