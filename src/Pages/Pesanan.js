@@ -71,8 +71,9 @@ export default class Pesanan extends Component {
     const {navigation} = this.props;
     const filteredElements = pesanan.filter((e) =>
       e.pelanggan.nama
-        ? e.pelanggan.nama.toLowerCase().includes(search)
-        : e || getDateOrder(e.tanggalPesan, '/').includes(search),
+        ? e.pelanggan.nama.toLowerCase().includes(search) ||
+          getDateOrder(e.tanggalPesan, '/').includes(search)
+        : e,
     );
     return (
       <View style={{flex: 1}}>
